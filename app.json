@@ -18,6 +18,7 @@
       "**/*"
     ],
     "ios": {
+      "requireFullScreen": true,
       "supportsTablet": true
     },
     "android": {
