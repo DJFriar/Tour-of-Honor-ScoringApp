@@ -3,9 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppLoading from 'expo-app-loading';
 
-// import AppNavigator from './app/navigation/AppNavigator';
+import AppNavigator from './app/navigation/AppNavigator';
 import AuthContext from './app/auth/context';
-import AuthNavigator from './app/navigation/AuthNavigator';
+// import AuthNavigator from './app/navigation/AuthNavigator';
 import authStorage from './app/auth/storage';
 import navigationTheme from './app/navigation/navigationTheme';
 
@@ -43,7 +43,7 @@ export default function App() {
     <AuthContext.Provider value={{user, setUser}}>
       <SafeAreaProvider>
         <NavigationContainer theme={navigationTheme}>
-          <AuthNavigator />
+          <AppNavigator />
           {/* {user ? <AppNavigator /> : <AuthNavigator />} */}
         </NavigationContainer>
       </SafeAreaProvider>

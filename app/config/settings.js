@@ -2,16 +2,19 @@ import Constants from 'expo-constants';
 
 const settings = {
   dev: {
-    apiUrl: 'http://10.0.0.100:3700/api/v1',
+    apiUrl: 'http://10.0.0.101:3700/api/v1',
     statusBarColor: 'orange',
+    submittedImagesBaseUrl: 'http://images.tourofhonor.com/TestData/'
   },
   test: {
     apiUrl: 'https://toh-portal.ambitiousnerds.com/api/v1',
     statusBarColor: 'blue',
+    submittedImagesBaseUrl: 'http://images.tourofhonor.com/TestData/'
   },  
   prod: {
     apiUrl: 'https://scoring.tourofhonor.com/api/v1',
     statusBarColor: '#c0dffd',
+    submittedImagesBaseUrl: 'http://images.tourofhonor.com/RallyImages/2022/'
   },
 }
 

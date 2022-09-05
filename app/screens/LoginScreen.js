@@ -35,7 +35,6 @@ function LoginScreen(props) {
           />
         </View>
         <AppText style={styles.text}>Please login below using your flag number and zip code.</AppText>
-        <AppText style={styles.text}>You must have already clicked the link in your Welcome Email to be able to use this app.</AppText>
         <AppForm 
           initialValues={{ flag: '', zipcode: ''}}
           onSubmit={handleSubmit}
