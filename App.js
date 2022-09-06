@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
 
 import AppNavigator from './app/navigation/AppNavigator';
 import AuthContext from './app/auth/context';
@@ -30,17 +30,34 @@ export default function App() {
     if (user) setUser(user);
   }
 
-  if (!isReady)
-    return (
-      <AppLoading
-        startAsync={restoreUser}
-        onFinish={() => setIsReady(true)}
-        onError={console.warn}
-      />
-    );
+  useEffect(() => {
+    async function prepare() {
+      try {
+        
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+
+
+  const onLayoutRootView = useCallback(async () => {
+    if (isReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [isReady]);
+
+  if (!isReady) {
+    return null;
+  }
 
   return (
-    <AuthContext.Provider value={{user, setUser}}>
+    <AuthContext.Provider value={{user, setUser}} onLayout={onLayoutRootView}>
       <SafeAreaProvider>
         <NavigationContainer theme={navigationTheme}>
           <AppNavigator />
