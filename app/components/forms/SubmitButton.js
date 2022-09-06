@@ -3,11 +3,11 @@ import { useFormikContext } from 'formik';
 
 import AppButton from '../AppButton';
 
-function SubmitButton({ disabled, title }) {
+function SubmitButton({ color, disabled, title }) {
   const { handleSubmit } = useFormikContext();
 
   return (
-    <AppButton title={title} onPress={handleSubmit} disabled={disabled}/>
+    <AppButton color={color} title={title} onPress={handleSubmit} disabled={disabled}/>
   );
 }
 

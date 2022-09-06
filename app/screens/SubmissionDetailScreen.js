@@ -3,27 +3,29 @@ import { Image, Platform, ScrollView, StyleSheet, useWindowDimensions, View } fr
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useIsFocused } from '@react-navigation/native';
 import * as Linking from 'expo-linking';
+import * as Yup from 'yup';
 
 import AppButton from '../components/AppButton';
 import AppText from '../components/AppText';
+import AppTextInput from '../components/AppTextInput';
 import colors from '../config/colors';
-import submission from '../api/scoring';
+import ImageLink from '../components/ImageLink';
+import MiniHeading from '../components/MiniHeading';
+import routes from '../navigation/routes';
 import Screen from '../components/Screen';
+import settings from '../config/settings';
+import submissionApi from '../api/scoring';
+import SubmitButton from '../components/forms/SubmitButton';
 import TappableIcon from '../components/TappableIcon';
 import useApi from '../hooks/useApi';
 import useAuth from '../auth/useAuth';
 
-function SubmissionDetailScreen({ route }) {
+function SubmissionDetailScreen({ navigation, route }) {
   const { user, logOut } = useAuth();
   const isFocused = useIsFocused();
   const submissionID = route.params.id;
-  let submissionStatus = 9;
-  const getSubmissionDetailsApi = useApi(submission.getPendingSubmissionDetails);
+  const getSubmissionDetailsApi = useApi(submissionApi.getPendingSubmissionDetails);
   const submissionDetails = getSubmissionDetailsApi.data[0] || {};
-  const getSubmissionStatusApi = useApi(submission.getSubmissionStatus);
-  const submissionStatusApiResponse = getSubmissionStatusApi.data[0] || {};
-  if (submissionStatusApiResponse.Status < 9) { submissionStatus = submissionStatusApiResponse.Status};
-
   const submissionLat = submissionDetails.Latitude;
   const submissionLong = submissionDetails.Longitude;
   const submissionCode = submissionDetails.Code;
@@ -32,8 +34,63 @@ function SubmissionDetailScreen({ route }) {
     ios: `${scheme}${submissionCode}@${submissionLat},${submissionLong}`,
     android: `${scheme}${submissionLat},${submissionLong}(${submissionCode})`
   });
-  const contentWidth = useWindowDimensions().width;
-  const imageURL = "http://images.tourofhonor.com/SampleImages/" + submissionDetails.SampleImage;
+  const primaryImageURL = settings.submittedImagesBaseUrl + submissionDetails.PrimaryImage;
+  const optionalImageURL = settings.submittedImagesBaseUrl + submissionDetails.OptionalImage;
+  const sampleImageURL = "http://images.tourofhonor.com/SampleImages/" + submissionDetails.SampleImage;
+
+  const handleApprove = async (submission) => {
+
+    console.log("==== submission ====");
+    console.log(submission);
+    const result = await submissionApi.postScoringResponse(
+      { 
+        Status: 1,
+        SubmissionID: submission.id,
+        MemorialID: submission.MemorialID,
+        UserID: submission.UserID,
+        FlagNumber: submission.FlagNumber,
+        OtherRiders: submission.OtherRiders
+      }
+    );
+
+    console.log("==== submit Scoring Response result ====");
+    console.log(result);
+
+    if (!result.ok) {
+      return alert('Could not save scoring response.')
+    } else {
+      navigation.navigate(routes.SUBMISSION_LIST)
+    }
+  }
+
+  const handleReject = async () => {
+    // if (ScorerNotes == "undefined" || ScorerNotes == "") {
+    //   return alert('ScorerNotes are required to reject a submission.');
+    // } else {
+    //   const result = await submissionApi.postScoringResponse(
+    //     {Status: 2}
+    //   );
+  
+    //   if (!result.ok) {
+    //     return alert('Could not save scoring response.')
+    //   } else {
+    //     navigation.goBack();
+    //   }
+    // }
+    console.log("handleReject was touched.");
+  }
+
+  const handleSkip = async () => {
+    const result = await submissionApi.postScoringResponse(
+      {Status: 3}
+    );
+
+    if (!result.ok) {
+      return alert('Could not save scoring response.')
+    } else {
+      // navigation.goBack();
+    }
+  }
 
   useEffect(() => {
     getSubmissionDetailsApi.request(submissionID);
@@ -52,65 +109,69 @@ function SubmissionDetailScreen({ route }) {
         {/* Top Section */}
         <View style={styles.topDetailInfo}>
           <View style={styles.submissionNameContainer}>
-            <AppText style={styles.submissionName}>{submissionDetails.Name}</AppText>
-            <AppText style={styles.submissionCityState}>{submissionDetails.City}, {submissionDetails.State}</AppText>
+            <AppText style={styles.submissionName}>#{submissionDetails.id}: Pending {submissionDetails.CatName} Submission</AppText>
           </View>
           <View style={styles.statusIcons}>
-            {submissionStatus === 2 && <FontAwesomeIcon icon={['fas', 'shield-exclamation']} size={25} color={'red'} />}
-            {submissionStatus === 1 && <FontAwesomeIcon icon={['fas', 'shield-check']} size={25} color={'green'} />}
-            {submissionStatus === 0 && <FontAwesomeIcon icon={['far', 'clock']} size={25} /> }
+            {submissionDetails.Status === 2 && <FontAwesomeIcon icon={['fas', 'shield-exclamation']} size={25} color={'red'} />}
+            {submissionDetails.Status === 1 && <FontAwesomeIcon icon={['fas', 'shield-check']} size={25} color={'green'} />}
+            {submissionDetails.Status === 0 && <FontAwesomeIcon icon={['far', 'clock']} size={25} /> }
           </View>
         </View>
 
         {/* Middle Section */}
-        <View style={styles.submissionCodeContainer}>
-          <AppText style={styles.submissionCodeText}>{submissionDetails.CategoryName}</AppText>
-          <AppText style={styles.submissionCodeText}>{submissionDetails.Code}</AppText>
-        </View>
         <View style={styles.sampleImageContainer}>
-          <Image style={styles.sampleImage} source={{uri: imageURL}} />
-        </View>
-        <View style={styles.infoIconsContainer}>
-          {submissionDetails.MultiImage > 0 && <FontAwesomeIcon icon={['far', 'images']} size={35} />}
-          <TappableIcon iconFamily="fal" iconName="map-signs" onPress={() => {Linking.openURL(gpsUrl)}}/>
-          {submissionDetails.Restrictions > 1 && <FontAwesomeIcon icon={['fas', 'octagon-exclamation']} size={35} color={'red'} />}
-          
-        </View>
-        {/* <View style={styles.submitButtonContainer}>
-          { submissionStatus === 9 &&
-            <AppButton title="Submit" onPress={() => 
-              navigation.navigate('MemorialSubmitScreen', { 
-                id: memorialID,
-                name: memorialDetails.Name,
-                code: memorialDetails.Code,
-                multiImage: memorialDetails.MultiImage,
-                sampleImage: memorialDetails.SampleImage
-              })} 
-            />
-          }
-          { memorialStatus === 2 &&
-            <AppButton title="Resubmit" onPress={() => 
-              navigation.navigate('MemorialSubmitScreen', { 
-                id: memorialID,
-                name: memorialDetails.Name,
-                code: memorialDetails.Code,
-                multiImage: memorialDetails.MultiImage,
-                sampleImage: memorialDetails.SampleImage
-              })} 
-            />
-          }
-          { memorialStatus === 1 &&
-            <View style={styles.disabledButtonContainer}>
-              <AppText style={styles.disabledButtonText}>You have already earned this memorial, congrats!</AppText>
+          <View>
+            {/* <ImageLink source={sampleImageURL} /> */}
+            <Image style={styles.sampleImage} source={{uri: sampleImageURL}} />
+            <View style={styles.infoIconsContainer}>
+              {submissionDetails.MultiImage > 0 && <FontAwesomeIcon icon={['far', 'images']} size={35} />}
+              <TappableIcon iconFamily="fal" iconName="map-signs" onPress={() => {Linking.openURL(gpsUrl)}}/>
+              {submissionDetails.Restrictions > 1 && <FontAwesomeIcon icon={['fas', 'octagon-exclamation']} size={35} color={'red'} />}
             </View>
-          }
-          { memorialStatus === 0 &&
-            <View style={styles.disabledButtonContainer}>
-              <AppText style={styles.disabledButtonText}>This memorial has been submitted and is awaiting review.</AppText>
+          </View>
+          <View style={styles.submissionDetailsContainer}>
+            <MiniHeading style={styles.miniHeader}>Memorial Info</MiniHeading>
+            <AppText style={styles.submissionDetailsText}>{submissionDetails.Name}</AppText>
+            <AppText style={styles.submissionDetailsText}>{submissionDetails.City}, {submissionDetails.State}</AppText>
+            <AppText style={styles.submissionDetailsText}>{submissionDetails.Latitude}, {submissionDetails.Longitude}</AppText>
+            <AppText style={styles.submissionDetailsText}>Access: {submissionDetails.Access}</AppText>
+            <AppText style={styles.submissionDetailsText}>MultiImage: {submissionDetails.MultiImage}</AppText>
+            <AppText style={styles.submissionDetailsText}>Restrictions: {submissionDetails.Restrictions}</AppText>
+            <MiniHeading style={styles.miniHeader}>Submission Info</MiniHeading>
+            <AppText style={styles.submissionDetailsText}>Source: {submissionDetails.Source}</AppText>
+            <AppText style={styles.submissionDetailsText}>Date: {submissionDetails.createdAt}</AppText>
+            <MiniHeading style={styles.miniHeader}>Rider Info</MiniHeading>
+            <AppText style={styles.submissionDetailsText}>{submissionDetails.FlagNumber}</AppText>
+            <AppText style={styles.submissionDetailsText}>{submissionDetails.FirstName} {submissionDetails.LastName}</AppText>
+            <AppText style={styles.submissionDetailsText}>{submissionDetails.Email}</AppText>
+          </View>
+        </View>
+        <View style={styles.submittedImagesContainer}>
+          {(submissionDetails.OptionalImage) ?
+          <>
+            <Image style={styles.submittedImage} source={{uri: primaryImageURL}} />
+            <Image style={[styles.submittedImage, {marginLeft: 8}]} source={{uri: optionalImageURL}} />
+          </> : <>
+            <Image style={styles.submittedImage} source={{uri: primaryImageURL}} />
+          </>}
+        </View>
+
+          <View>  
+            <AppTextInput 
+              autoCorrect
+              maxLength={250}
+              multiline
+              name="ScorerNotes"
+              numberOfLines={4}
+              placeholder="Scorer Notes"
+            />
+            <View style={styles.scoringButtonsContainer}>
+              <AppButton title="Reject" color="primary" onPress={() => handleReject(submissionDetails)} />
+              <AppButton title="Skip" color="blue" onPress={() => handleSkip(submissionDetails)} />
+              <AppButton title="Approve" color="green" onPress={() => handleApprove(submissionDetails)} />
             </View>
-          }
-        </View> */}
-        
+          </View>
+
         <View style={{paddingVertical: 10}}>
           <AppText>&nbsp;</AppText>
         </View>
@@ -140,22 +201,25 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     paddingTop: 6,
   },
-  memorialCityState: {
+  miniHeader: {
+    paddingTop: 6,
+  },
+  submissionCityState: {
     fontSize: 16
   },
-  memorialCodeContainer: {
+  submissionCodeContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
   },
-  memorialCodeText: {
+  submissionCodeText: {
     fontSize: 16,
   },
-  memorialName: {
+  submissionName: {
     fontSize: 20,
     fontWeight: "600"
   },
-  memorialNameContainer: {
+  submissionNameContainer: {
     flex: 1,
   },
   metadataDetailContainer: {
@@ -164,15 +228,24 @@ const styles = StyleSheet.create({
   },
   sampleImage: {
     borderRadius: 10,
-    height: 270,
-    width: 360,
+    height: 315,
+    width: 420,
   },
   sampleImageContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
     paddingTop: 10,
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  scoringButtonsContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    justifyContent: 'space-between',
+    width: '100%',
   },
   statusIcons: {
     alignItems: 'flex-end',
@@ -181,6 +254,18 @@ const styles = StyleSheet.create({
   },
   submitButtonContainer: {
     marginHorizontal: 25,
+  },
+  submittedImage: {
+    borderRadius: 10,
+    height: 270,
+    width: 360,
+  },
+  submittedImagesContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingTop: 20,
+    width: '100%',
   },
   topDetailInfo: {
     flexDirection: 'row',

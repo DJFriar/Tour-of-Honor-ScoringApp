@@ -22,7 +22,7 @@ const AppNavigator = () => (
       component={SubmissionNavigator}
       options={({ navigation }) => ({
           headerShown: false,
-          tabBarButton: () => <SubmissionsButton onPress={() => navigation.navigate(routes.MEMORIAL_LIST)}/>,
+          tabBarButton: () => <SubmissionsButton onPress={() => navigation.navigate(routes.SUBMISSION_LIST)}/>,
         })}
     />
     <Tab.Screen name="Stats" component={StatsScreen} options={{
