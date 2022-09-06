@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import AppNavigator from './app/navigation/AppNavigator';
 import AuthContext from './app/auth/context';
-// import AuthNavigator from './app/navigation/AuthNavigator';
+import AuthNavigator from './app/navigation/AuthNavigator';
 import authStorage from './app/auth/storage';
 import navigationTheme from './app/navigation/navigationTheme';
 
@@ -33,7 +33,7 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
-        
+        restoreUser();
       } catch (e) {
         console.warn(e);
       } finally {
@@ -60,8 +60,8 @@ export default function App() {
     <AuthContext.Provider value={{user, setUser}} onLayout={onLayoutRootView}>
       <SafeAreaProvider>
         <NavigationContainer theme={navigationTheme}>
-          <AppNavigator />
-          {/* {user ? <AppNavigator /> : <AuthNavigator />} */}
+          {/* <AppNavigator /> */}
+          {user ? <AppNavigator /> : <AuthNavigator />}
         </NavigationContainer>
       </SafeAreaProvider>
     </AuthContext.Provider>
