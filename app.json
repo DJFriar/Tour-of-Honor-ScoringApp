@@ -19,16 +19,23 @@
     ],
     "ios": {
       "requireFullScreen": true,
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ambitiousNerds.TourOfHonorScoring"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.ambitiousNerds.TourOfHonorScoring"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f8d92dfb-4341-443a-b7ce-f020674c20c5"
+      }
     }
   }
 }
