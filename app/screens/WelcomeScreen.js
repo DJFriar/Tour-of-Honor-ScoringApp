@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, ImageBackground, Image } from 'react-native';
-// import * as Linking from 'expo-linking';
 
 import colors from '../config/colors';
 import AppButton from '../components/AppButton';
