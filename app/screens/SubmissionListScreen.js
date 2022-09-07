@@ -68,7 +68,7 @@ function SubmissionListScreen({ navigation }) {
           cityState={item.City + ", " + item.State}
           code={item.Code}
           image={item.PrimaryImage}
-          submitterName={item.FirstName + ", " + item.LastName}
+          submitterName={item.FirstName + " " + item.LastName}
           submitterFlag={item.FlagNumber}
           onPress={() => navigation.navigate("SubmissionDetailScreen", {id: item.id})}
         />}

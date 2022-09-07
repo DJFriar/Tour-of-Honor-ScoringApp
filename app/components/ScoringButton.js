@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import colors from '../config/colors';
 
-function AppButton({color, disabled = false, onPress, title}) {
+function ScoringButton({color, disabled = false, onPress, title}) {
   if(disabled) {
     return (
       <TouchableOpacity style={[styles.button, {backgroundColor: colors[color]}]} onPress={onPress} disabled>
@@ -18,7 +18,7 @@ function AppButton({color, disabled = false, onPress, title}) {
   }
 }
 
-export default AppButton;
+export default ScoringButton;
 
 const styles = StyleSheet.create({
   button: {
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginVertical: 10,
     padding: 15,
-    width: '100%',
+    width: '33%',
   },
   text: {
     color: colors.white,
