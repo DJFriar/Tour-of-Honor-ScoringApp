@@ -11,14 +11,14 @@ import navigationTheme from './app/navigation/navigationTheme';
 
 // FontAwesome Setup
 import { library } from '@fortawesome/fontawesome-svg-core';
-// import { fab } from '@fortawesome/free-brands-svg-icons';
-import { faChevronRight, faMapMarkedAlt, faMapSigns } from '@fortawesome/pro-light-svg-icons';
-import { faBan, faChartBar, faChevronDown, faClock, faFrown, faImages, faSearch, faTimes } from '@fortawesome/pro-regular-svg-icons';
+import { faAndroid, faApple } from '@fortawesome/free-brands-svg-icons';
+import { faBrowser, faChevronRight, faMapMarkedAlt, faMapSigns, faSquareQuestion } from '@fortawesome/pro-light-svg-icons';
+import { faBan, faChartBar, faChevronDown, faClock, faFrown, faImages, faPlayPause, faSearch, faTimes } from '@fortawesome/pro-regular-svg-icons';
 import { faAnalytics, faCameraRetro, faFlag, faLocationDot, faOctagonExclamation, faShieldCheck, faShieldExclamation, faUser } from '@fortawesome/pro-solid-svg-icons';
 library.add(
-  faAnalytics, faBan, faCameraRetro, faChartBar, faChevronDown, faChevronRight, faClock, faFlag, faFrown, 
-  faImages, faLocationDot, faMapMarkedAlt, faMapSigns, faOctagonExclamation, faSearch, faShieldCheck, 
-  faShieldExclamation, faTimes, faUser
+  faAnalytics, faAndroid, faApple, faBan, faBrowser, faCameraRetro, faChartBar, faChevronDown, faChevronRight, faClock, faFlag, faFrown, 
+  faImages, faLocationDot, faMapMarkedAlt, faMapSigns, faOctagonExclamation, faPlayPause, faSearch, faShieldCheck, 
+  faShieldExclamation, faSquareQuestion, faTimes, faUser
 )
 
 export default function App() {

@@ -6,13 +6,18 @@ const getPendingSubmissionDetails = (id) => apiClient.get(endpoint + '/data/' + 
 const getPendingSubmissionList = () => apiClient.get(endpoint);
 const getSubmissionStatus = (id) => apiClient.get(endpoint + '/status/' + id);
 
-const postScoringResponse = (submission) => {
-  if (submission) { 
-    console.log("Submission Data Receivd: " + submission)
-  } else { 
-    console.log("postScoringResponse failed to get data.")
+const postScoringResponse = async (submission) => {
+
+  const dataToPost = {
+    FlagNumber: submission.FlagNumber,
+    id: submission.SubmissionID,
+    MemorialID: submission.MemorialID,
+    OtherRiders: submission.OtherRiders,
+    ScorerNotes: submission.ScorerNotes,
+    Status: submission.Status,
+    UserID: submission.UserID,
   }
-  
+
   const data= new FormData();
 
   data.append('FlagNumber', submission.FlagNumber);
@@ -23,10 +28,12 @@ const postScoringResponse = (submission) => {
   data.append('Status', submission.Status);
   data.append('UserID', submission.UserID);
 
-  console.log("==== data object ====");
-  console.log(data);
+  const response = await apiClient.post(endpoint, dataToPost);
 
-  return apiClient.post(endpoint, data)
+  console.log("==== response in scoring.js ====");
+  console.log(response);
+
+  return response;
 }
 
 export default {

@@ -1,32 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 import apiClient from "../api/client";
-// import AppPicker from '../components/AppPicker';
-// import AppTextInput from '../components/AppTextInput';
 import colors from '../config/colors';
 import ListItem from '../components/ListItem';
 import ListItemSeperator from '../components/ListItemSeperator';
 import Screen from '../components/Screen';
-// import submission from '../api/scoring';
 
 function SubmissionListScreen({ navigation }) {
   const [displayList, setDisplayList] = useState();
-  // const [filteredList, setFilteredList] = useState();
-  // const [masterList, setMasterList] = useState();
   const [onRefresh, setOnRefresh] = useState(false);
-  // const getPendingSubmissionListApi = useApi(submission.getPendingSubmissionList);
-  // const pendingSubmissionList = getPendingSubmissionListApi.data[0] || {};
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     fetchSubmissionList();
-  }, []);
+  }, [isFocused]);
   
   const fetchSubmissionList = () => {
     apiClient.get('/scoring-list').then((response) => {
       setDisplayList(response.data);
-      // setFilteredList(response.data);
-      // setMasterList(response.data);
     }).catch((error) => {
       console.log(error);
     })
@@ -34,9 +27,6 @@ function SubmissionListScreen({ navigation }) {
 
   const handleRefresh = () => {
     setDisplayList(null);
-    // setFilteredList(null);
-    // setMasterList(null);
-
     fetchSubmissionList();
   }
 
@@ -68,6 +58,8 @@ function SubmissionListScreen({ navigation }) {
           cityState={item.City + ", " + item.State}
           code={item.Code}
           image={item.PrimaryImage}
+          source={item.Source}
+          status={item.Status}
           submitterName={item.FirstName + " " + item.LastName}
           submitterFlag={item.FlagNumber}
           onPress={() => navigation.navigate("SubmissionDetailScreen", {id: item.id})}

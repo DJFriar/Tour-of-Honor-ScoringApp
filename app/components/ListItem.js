@@ -6,7 +6,7 @@ import colors from '../config/colors';
 import settings from '../config/settings';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
-function ListItem({cityState, category, code, image, submitterName, submitterFlag, onPress}) {
+function ListItem({cityState, category, code, image, source, status, submitterName, submitterFlag, onPress}) {
   const imageBaseUrl = settings.submittedImagesBaseUrl;
   const imageURL = imageBaseUrl + image;
   return (
@@ -23,9 +23,11 @@ function ListItem({cityState, category, code, image, submitterName, submitterFla
               <AppText style={styles.cityState} numberOfLines={1}>{cityState}</AppText>
             </View>
             <View style={styles.sourceIconContainer}>
-              {/* <FontAwesomeIcon icon={['fas', 'shield-exclamation']} size={20} color={'red'} /> */}
-              {/* <FontAwesomeIcon icon={['fas', 'shield-check']} size={20} color={'green'} /> */}
-              {/* <FontAwesomeIcon icon={['far', 'clock']} size={20} /> */}
+              {status == 3 && (<FontAwesomeIcon style={styles.icon} icon={['far', 'play-pause']} size={20} />)}
+              {source == 1 && (<FontAwesomeIcon style={styles.icon} icon={['fal', 'square-question']} size={20} />)}
+              {source == 2 && (<FontAwesomeIcon style={styles.icon} icon={['fab', 'apple']} size={20} />)}
+              {source == 3 && (<FontAwesomeIcon style={styles.icon} icon={['fab', 'android']} size={20} />)}
+              {source == 4 && (<FontAwesomeIcon style={styles.icon} icon={['fal', 'browser']} size={20} />)}
             </View>
           </View>
           <View style={styles.memorialCode}>
@@ -57,6 +59,9 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 10,
   },
+  icon: {
+    marginLeft: 8
+  },
   image: {
     width: 80,
     height: 80,
@@ -85,7 +90,8 @@ const styles = StyleSheet.create({
   sourceIconContainer: {
     alignItems: 'flex-end',
     flex: 1,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
   },
   row2: {
     flex: 1,

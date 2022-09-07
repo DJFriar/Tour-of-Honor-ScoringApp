@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { useIsFocused } from '@react-navigation/native';
 import { DateTime } from 'luxon';
 import * as Linking from 'expo-linking';
-import * as Yup from 'yup';
 
 import AppButton from '../components/AppButton';
 import AppText from '../components/AppText';
@@ -12,11 +11,10 @@ import AppTextInput from '../components/AppTextInput';
 import colors from '../config/colors';
 import MiniHeading from '../components/MiniHeading';
 import routes from '../navigation/routes';
+import scoringApi from '../api/scoring';
 import ScoringButton from '../components/ScoringButton';
 import Screen from '../components/Screen';
 import settings from '../config/settings';
-import submissionApi from '../api/scoring';
-import SubmitButton from '../components/forms/SubmitButton';
 import useApi from '../hooks/useApi';
 import useAuth from '../auth/useAuth';
 
@@ -29,9 +27,10 @@ function addZero(i) {
 
 function SubmissionDetailScreen({ navigation, route }) {
   const { user, logOut } = useAuth();
+  const [scorerNotes, setScorerNotes] = useState('');
   const isFocused = useIsFocused();
   const submissionID = route.params.id;
-  const getSubmissionDetailsApi = useApi(submissionApi.getPendingSubmissionDetails);
+  const getSubmissionDetailsApi = useApi(scoringApi.getPendingSubmissionDetails);
   const submissionDetails = getSubmissionDetailsApi.data[0] || {};
   const submissionLat = submissionDetails.Latitude;
   const submissionLong = submissionDetails.Longitude;
@@ -65,26 +64,21 @@ function SubmissionDetailScreen({ navigation, route }) {
 
     formattedDate = month + "/" + day + "/" + year + ", " + adjustedHour + ":" + minutes + (hour > 11 ? " PM" : " AM");
   } else {
-    formattedDate = DateTime.fromISO(rawDate).setZone("America/Chicago").toLocaleString(DateTime.DATETIME_SHORT);
+    formattedDate = DateTime.fromISO(rawDate).setZone("America/New York").toLocaleString(DateTime.DATETIME_SHORT);
   }
 
   const handleApprove = async (submission) => {
+    const approvedData = {
+      FlagNumber: submission.FlagNumber,
+      MemorialID: submission.MemorialID,
+      OtherRiders: submission.OtherRiders,
+      ScorerNotes: scorerNotes,
+      Status: 1,
+      SubmissionID: submission.id,
+      UserID: submission.UserID,
+    }
 
-    console.log("==== submission ====");
-    console.log(submission);
-    const result = await submissionApi.postScoringResponse(
-      { 
-        Status: 1,
-        SubmissionID: submission.id,
-        MemorialID: submission.MemorialID,
-        UserID: submission.UserID,
-        FlagNumber: submission.FlagNumber,
-        OtherRiders: submission.OtherRiders
-      }
-    );
-
-    console.log("==== submit Scoring Response result ====");
-    console.log(result);
+    const result = await scoringApi.postScoringResponse(approvedData);
 
     if (!result.ok) {
       return alert('Could not save scoring response.')
@@ -93,32 +87,37 @@ function SubmissionDetailScreen({ navigation, route }) {
     }
   }
 
-  const handleReject = async () => {
-    // if (ScorerNotes == "undefined" || ScorerNotes == "") {
-    //   return alert('ScorerNotes are required to reject a submission.');
-    // } else {
-    //   const result = await submissionApi.postScoringResponse(
-    //     {Status: 2}
-    //   );
-  
-    //   if (!result.ok) {
-    //     return alert('Could not save scoring response.')
-    //   } else {
-    //     navigation.goBack();
-    //   }
-    // }
-    console.log("handleReject was touched.");
-  }
+  const handleReject = async (submission) => {
+    if (scorerNotes == '') { return alert('You must provide notes to reject a submission.')}
+    
+    const rejectData = {
+      ScorerNotes: scorerNotes,
+      Status: 2,
+      SubmissionID: submission.id
+    }
 
-  const handleSkip = async () => {
-    const result = await submissionApi.postScoringResponse(
-      {Status: 3}
-    );
+    const result = await scoringApi.postScoringResponse(rejectData);
 
     if (!result.ok) {
       return alert('Could not save scoring response.')
     } else {
-      // navigation.goBack();
+      navigation.navigate(routes.SUBMISSION_LIST)
+    }
+  }
+
+  const handleSkip = async (submission) => {
+    const skipData = {
+      ScorerNotes: scorerNotes,
+      Status: 3,
+      SubmissionID: submission.id
+    }
+
+    const result = await scoringApi.postScoringResponse(skipData);
+
+    if (!result.ok) {
+      return alert('Could not save scoring response.')
+    } else {
+      navigation.navigate(routes.SUBMISSION_LIST)
     }
   }
 
@@ -168,13 +167,20 @@ function SubmissionDetailScreen({ navigation, route }) {
             </TouchableOpacity>
           </>}
         </View>
+        {(submissionDetails.RiderNotes) && 
+          <View style={styles.riderNotesContainer}>
+            <MiniHeading style={styles.miniHeader}>Rider Notes</MiniHeading>
+            <AppText style={styles.riderNotesText}>{submissionDetails.RiderNotes}</AppText>
+          </View>}
         <View style={styles.scoringSectionContainer}>  
           <AppTextInput 
             autoCorrect
+            defaultValue={submissionDetails.ScorerNotes}
             maxLength={250}
             multiline
             name="ScorerNotes"
             numberOfLines={4}
+            onChangeText={newNotes => setScorerNotes(newNotes)}
             placeholder="Scorer Notes"
           />
           <View style={styles.scoringButtonsContainer}>
@@ -188,7 +194,10 @@ function SubmissionDetailScreen({ navigation, route }) {
         <View style={styles.submissionDetailsContainer}>
           <View style={styles.submissionDetailsDataLeft}>          
             <MiniHeading style={styles.miniHeader}>Submission Info</MiniHeading>
-            <AppText style={styles.submissionDetailsText}>Source: {submissionDetails.Source}</AppText>
+            {submissionDetails.Source == 1 && (<AppText style={styles.submissionDetailsText}>Source: <FontAwesomeIcon style={styles.icon} icon={['fal', 'square-question']}/> Unknown</AppText>)}
+            {submissionDetails.Source == 2 && (<AppText style={styles.submissionDetailsText}>Source: <FontAwesomeIcon style={styles.icon} icon={['fab', 'apple']} /> iPhone</AppText>)}
+            {submissionDetails.Source == 3 && (<AppText style={styles.submissionDetailsText}>Source: <FontAwesomeIcon style={styles.icon} icon={['fab', 'android']} /> Android</AppText>)}
+            {submissionDetails.Source == 4 && (<AppText style={styles.submissionDetailsText}>Source: <FontAwesomeIcon style={styles.icon} icon={['fal', 'browser']} /> Web Portal</AppText>)}
             <AppText style={styles.submissionDetailsText}>Date: {formattedDate}</AppText>
             <MiniHeading style={[styles.miniHeader, {marginTop: 6}]}>Rider Info</MiniHeading>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.FlagNumber}</AppText>
@@ -240,6 +249,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 10,
   },
+  riderNotesContainer: {
+    marginTop: 16,
+    marginHorizontal: 10
+  },
   sampleImage: {
     borderRadius: 10,
     height: 315,
@@ -289,7 +302,7 @@ const styles = StyleSheet.create({
   submissionDetailsContainer: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     marginHorizontal: 10,
     paddingVertical: 10,
     width: '100%',
@@ -301,6 +314,7 @@ const styles = StyleSheet.create({
   submissionDetailsDataRight: {
     marginLeft: 2,
     marginRight: 10,
+    paddingRight: 10
   },
   submissionName: {
     fontSize: 20,
