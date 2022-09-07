@@ -62,7 +62,7 @@ function LoginScreen(props) {
               placeholder="Zip Code"
               height={60}
             />
-            <SubmitButton title="Login"/>
+            <SubmitButton title="Login" color="blue"/>
           </View>
         </AppForm>
       </ScrollView>
