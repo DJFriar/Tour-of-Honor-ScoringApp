@@ -14,10 +14,10 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { faAndroid, faApple } from '@fortawesome/free-brands-svg-icons';
 import { faBrowser, faChevronRight, faMapMarkedAlt, faMapSigns, faSquareQuestion } from '@fortawesome/pro-light-svg-icons';
 import { faBan, faChartBar, faChevronDown, faClock, faFrown, faImages, faPlayPause, faSearch, faTimes } from '@fortawesome/pro-regular-svg-icons';
-import { faAnalytics, faCameraRetro, faFlag, faLocationDot, faOctagonExclamation, faShieldCheck, faShieldExclamation, faUser } from '@fortawesome/pro-solid-svg-icons';
+import { faAnalytics, faCameraRetro, faFlag, faLocationDot, faOctagonExclamation, faPeople, faShieldCheck, faShieldExclamation, faUser } from '@fortawesome/pro-solid-svg-icons';
 library.add(
   faAnalytics, faAndroid, faApple, faBan, faBrowser, faCameraRetro, faChartBar, faChevronDown, faChevronRight, faClock, faFlag, faFrown, 
-  faImages, faLocationDot, faMapMarkedAlt, faMapSigns, faOctagonExclamation, faPlayPause, faSearch, faShieldCheck, 
+  faImages, faLocationDot, faMapMarkedAlt, faMapSigns, faOctagonExclamation, faPeople, faPlayPause, faSearch, faShieldCheck, 
   faShieldExclamation, faSquareQuestion, faTimes, faUser
 )
 

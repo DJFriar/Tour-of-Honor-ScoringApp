@@ -146,6 +146,9 @@ function SubmissionDetailScreen({ navigation, route }) {
           <View style={styles.statusIcons}>
             {submissionDetails.MultiImage == 'Yes' && <FontAwesomeIcon icon={['far', 'images']} size={iconSize} />}
           </View>
+          <View style={styles.statusIcons}>
+            {submissionDetails.OtherRiders && <FontAwesomeIcon icon={['fas', 'people']} size={iconSize} />}
+          </View>
         </View>
 
         {/* Top Section */}
@@ -194,21 +197,23 @@ function SubmissionDetailScreen({ navigation, route }) {
         <View style={styles.submissionDetailsContainer}>
           <View style={styles.submissionDetailsDataLeft}>          
             <MiniHeading style={styles.miniHeader}>Submission Info</MiniHeading>
-            {submissionDetails.Source == 1 && (<AppText style={styles.submissionDetailsText}>Source: <FontAwesomeIcon style={styles.icon} icon={['fal', 'square-question']}/> Unknown</AppText>)}
-            {submissionDetails.Source == 2 && (<AppText style={styles.submissionDetailsText}>Source: <FontAwesomeIcon style={styles.icon} icon={['fab', 'apple']} /> iPhone</AppText>)}
-            {submissionDetails.Source == 3 && (<AppText style={styles.submissionDetailsText}>Source: <FontAwesomeIcon style={styles.icon} icon={['fab', 'android']} /> Android</AppText>)}
-            {submissionDetails.Source == 4 && (<AppText style={styles.submissionDetailsText}>Source: <FontAwesomeIcon style={styles.icon} icon={['fal', 'browser']} /> Web Portal</AppText>)}
-            <AppText style={styles.submissionDetailsText}>Date: {formattedDate}</AppText>
+            {submissionDetails.Source == 1 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fal', 'square-question']}/> Unknown</AppText>)}
+            {submissionDetails.Source == 2 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fab', 'apple']} /> iPhone</AppText>)}
+            {submissionDetails.Source == 3 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fab', 'android']} /> Android</AppText>)}
+            {submissionDetails.Source == 4 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fal', 'browser']} /> Web Portal</AppText>)}
+            <AppText style={styles.submissionDetailsText}>{formattedDate}</AppText>
             <MiniHeading style={[styles.miniHeader, {marginTop: 6}]}>Rider Info</MiniHeading>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.FlagNumber}</AppText>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.FirstName} {submissionDetails.LastName}</AppText>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.Email}</AppText>
+            <MiniHeading style={[styles.miniHeader, {marginTop: 6}]}>Other Riders</MiniHeading>
+            <AppText style={styles.submissionDetailsText}>{submissionDetails.OtherRiders}</AppText>
           </View>
           <View style={styles.submissionDetailsDataRight}>
             <MiniHeading style={styles.miniHeader}>Memorial Info</MiniHeading>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.Code}</AppText>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.City}, {submissionDetails.State}</AppText>
-            <AppText style={[styles.submissionDetailsText, {marginBottom: 11}]}>{submissionDetails.Latitude}, {submissionDetails.Longitude}</AppText>
+            <TouchableOpacity onPress={() => {Linking.openURL(gpsUrl)}}><AppText style={[styles.submissionDetailsText, {marginBottom: 11}]}>{submissionDetails.Latitude}, {submissionDetails.Longitude}</AppText></TouchableOpacity>
             <AppText style={styles.submissionDetailsText}>Access: {submissionDetails.Access}</AppText>
             <AppText style={styles.submissionDetailsText}>MultiImage: {submissionDetails.MultiImage}</AppText>
             <AppText style={styles.submissionDetailsText}>Restrictions: {submissionDetails.Restrictions}</AppText>
@@ -300,7 +305,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   submissionDetailsContainer: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 10,
@@ -314,7 +319,7 @@ const styles = StyleSheet.create({
   submissionDetailsDataRight: {
     marginLeft: 2,
     marginRight: 10,
-    paddingRight: 10
+    paddingRight: 10,
   },
   submissionName: {
     fontSize: 20,
