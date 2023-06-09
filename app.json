@@ -2,7 +2,7 @@
   "expo": {
     "name": "TourOfHonor-Scoring",
     "slug": "TourOfHonor-Scoring",
-    "version": "1.0.3",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./app/assets/appIcon.png",
     "splash": {
@@ -13,11 +13,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
+    "userInterfaceStyle": "automatic",
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "buildNumber": "4",
+      "buildNumber": "7",
       "requireFullScreen": true,
       "supportsTablet": true,
       "bundleIdentifier": "com.ambitiousNerds.TourOfHonorScoring"
@@ -28,7 +29,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.ambitiousNerds.TourOfHonorScoring",
-      "versionCode": 5
+      "versionCode": 7
     },
     "web": {
       "favicon": "./app/assets/favicon.png"

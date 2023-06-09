@@ -18,7 +18,7 @@ function SubmissionListScreen({ navigation }) {
   }, [isFocused]);
   
   const fetchSubmissionList = () => {
-    apiClient.get('/scoring-list').then((response) => {
+    apiClient.get('/submission/pendingHeld').then((response) => {
       setDisplayList(response.data);
     }).catch((error) => {
       console.log(error);

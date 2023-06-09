@@ -17,10 +17,17 @@ const validationSchema = Yup.object().shape({
 function LoginScreen(props) {
   const auth = useAuth();
   const [loginFailed, setLoginFailed] = useState(false);
+  const [errorMessageText, setErrorMessageText] = useState('An unexpected error occured. If this error persists, please send an email to support@tourofhonor.com.');
 
   const handleSubmit = async ({flag, zipcode}) => {
     const result = await authApi.login(flag, zipcode);
-    if (!result.ok) return setLoginFailed(true);
+    console.log(`authResponse was: ${JSON.stringify(result.status)}`);
+    if (!result.ok) {
+      if (result.status === 400) setErrorMessageText("Invalid Flag # and/or Zip Code.");
+      if (result.status === 401) setErrorMessageText("Error 401. Please contact TOH Support.");
+      if (result.status === 403) setErrorMessageText("Please update this app to continue.");
+      return setLoginFailed(true);
+    }
     setLoginFailed(false);
     auth.logIn(result.data);
   }
@@ -41,7 +48,7 @@ function LoginScreen(props) {
           validationSchema={validationSchema}
         >
           <View style={styles.errorMessage}>
-            <ErrorMessage error="Invalid flag and/or zipcode. Please ensure you clicked the link in your Welcome Email before using this app." visible={loginFailed} />
+            <ErrorMessage error={errorMessageText}  visible={loginFailed} />
           </View>
           <View style={styles.formContent}>
             <AppFormField 
