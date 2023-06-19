@@ -14,7 +14,7 @@ const settings = {
   prod: {
     apiUrl: 'https://scoring.tourofhonor.com/api/v1',
     statusBarColor: '#c0dffd',
-    submittedImagesBaseUrl: 'http://images.tourofhonor.com/RallyImages/2022/'
+    submittedImagesBaseUrl: 'http://images.tourofhonor.com/RallyImages/2023/'
   },
 }
 
