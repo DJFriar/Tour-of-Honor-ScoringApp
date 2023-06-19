@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "TourOfHonor-Scoring",
-    "slug": "TourOfHonor-Scoring",
-    "version": "1.2.0",
+    "name": "TourOfHonor-ScoringApp",
+    "slug": "TourOfHonor-ScoringApp",
+    "version": "1.2.1",
     "orientation": "portrait",
     "icon": "./app/assets/appIcon.png",
     "splash": {
@@ -18,25 +18,25 @@
       "**/*"
     ],
     "ios": {
-      "buildNumber": "7",
+      "buildNumber": "8",
       "requireFullScreen": true,
       "supportsTablet": true,
-      "bundleIdentifier": "com.ambitiousNerds.TourOfHonorScoring"
+      "bundleIdentifier": "com.ambitiousNerds.TourOfHonorScoringApp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.ambitiousNerds.TourOfHonorScoring",
-      "versionCode": 7
+      "package": "com.ambitiousNerds.TourOfHonorScoringApp",
+      "versionCode": 8
     },
     "web": {
       "favicon": "./app/assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "285108af-f165-445e-b470-b9006113e056"
+        "projectId": "d33bad68-ee9d-4f3f-bf77-d6c9985220c6"
       }
     }
   }
