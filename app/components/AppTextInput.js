@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Platform, StyleSheet, TextInput, View } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 
 import defaultStyles from '../config/styles';
 
 function AppTextInput({ iconName, iconFamily, height, ...otherProps }) {
   return (
-    <View style={[styles.container, {height: height}]}>
+    <View style={[styles.container, { height: height }]}>
       <View style={styles.iconContainer}>
         {iconName && <FontAwesomeIcon icon={[iconFamily, iconName]} size={20} color={defaultStyles.colors.medium} />}
       </View>
@@ -31,12 +31,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  iconContainer:{
+  iconContainer: {
     marginHorizontal: 10,
   },
   text: {
     color: defaultStyles.colors.dark,
-    fontFamily: Platform.OS === "android" ? "Roboto": "Avenir",
+    fontFamily: Platform.OS === "android" ? "Roboto" : "Avenir",
   },
   textContainer: {
     flex: 1,
