@@ -18,6 +18,10 @@
       }
     },
     "production": {
+      "android": {
+        "releaseStatus": "draft",
+        "track": "internal"
+      },
       "autoIncrement": true,
       "ios": {
         "resourceClass": "m-medium"
