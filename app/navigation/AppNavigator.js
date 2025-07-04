@@ -13,6 +13,9 @@ const Tab = createBottomTabNavigator();
 const AppNavigator = () => (
   <Tab.Navigator
     initialRouteName='SubmissionNavigator'
+    screenOptions={{
+      tabBarLabelStyle: { paddingTop: 5 },
+    }}
   >
     <Tab.Screen name="User Settings" component={AccountScreen} options={{
       tabBarIcon: ({ color, size }) => <FontAwesomeIcon icon={['fas', 'user']} color={color} size={size * 1.3} />
@@ -21,14 +24,14 @@ const AppNavigator = () => (
       name='SubmissionNavigator'
       component={SubmissionNavigator}
       options={({ navigation }) => ({
-          headerShown: false,
-          tabBarButton: () => <SubmissionsButton onPress={() => navigation.navigate(routes.SUBMISSION_LIST)}/>,
-        })}
+        headerShown: false,
+        tabBarButton: () => <SubmissionsButton onPress={() => navigation.navigate(routes.SUBMISSION_NAVIGATOR)} />,
+      })}
     />
     <Tab.Screen name="Stats" component={StatsScreen} options={{
       headerShown: false,
       tabBarIcon: ({ color, size }) => <FontAwesomeIcon icon={['fas', 'analytics']} color={color} size={size * 1.3} />
-    }}/>
+    }} />
   </Tab.Navigator>
 )
 

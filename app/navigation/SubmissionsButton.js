@@ -18,16 +18,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: colors.white,
     borderRadius: 40,
-    borderWidth: 10,
     bottom: Platform.OS === "android" ? 30 : 20,
-    height: 80,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     // opacity: .6, -- Would be nice to set this on active/inactive state, but not urgent.
-    width: 80,
   },
   icon: {
-    height: 70,
-    width: 70
+    height: 80,
+    width: 80
   }
 });
 
