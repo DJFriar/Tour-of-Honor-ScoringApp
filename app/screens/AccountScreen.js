@@ -10,7 +10,7 @@ import useAuth from '../auth/useAuth';
 function AccountScreen(props) {
   const { user, logOut } = useAuth();
   const appVersion = Application.nativeApplicationVersion;
-  
+
   console.log(user);
 
   return (
@@ -23,7 +23,7 @@ function AccountScreen(props) {
               <Text style={styles.flag}>Flag #{user.FlagNumber}</Text>
             </View>
             <View style={styles.logoutButtonContainer}>
-              <MiniAppButton title="Log Out" onPress={() => logOut()}/>
+              <MiniAppButton title="Log Out" onPress={() => logOut()} />
             </View>
           </View>
           <View style={styles.userDetailContainer}>
@@ -38,14 +38,14 @@ function AccountScreen(props) {
             <Text>To make changes to your User Profile, please login to the Scoring Portal.</Text>
           </View>
 
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <View style={{flex: 1, height: 1, backgroundColor: 'black'}} />
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flex: 1, height: 1, backgroundColor: 'black' }} />
           </View>
 
         </View>
         <View style={styles.bottomContainer}>
           <View style={styles.appInfoRow}>
-            <Text style={styles.copyright}>&copy;2022 ambitiousNerds</Text>
+            <Text style={styles.copyright}>&copy;2025 ambitiousNerds</Text>
             <Text style={styles.appInfo}>Version {appVersion}</Text>
           </View>
         </View>
@@ -55,10 +55,10 @@ function AccountScreen(props) {
 }
 
 const styles = StyleSheet.create({
-  appInfo:{
+  appInfo: {
     fontSize: 12,
   },
-  appInfoRow:{
+  appInfoRow: {
     alignItems: 'flex-end',
     flex: 1,
     flexDirection: 'row',
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     paddingRight: 10
   },
-  flag :{
+  flag: {
     fontSize: 20,
   },
   iconDefinition: {
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: colors.background,
   },
-  suggestionsSection:{
+  suggestionsSection: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
