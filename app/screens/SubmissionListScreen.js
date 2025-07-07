@@ -16,7 +16,7 @@ function SubmissionListScreen({ navigation }) {
   useEffect(() => {
     fetchSubmissionList();
   }, [isFocused]);
-  
+
   const fetchSubmissionList = () => {
     apiClient.get('/submission/pendingHeld').then((response) => {
       setDisplayList(response.data);
@@ -32,38 +32,28 @@ function SubmissionListScreen({ navigation }) {
 
   return (
     <Screen style={styles.screen} hasNoHeader>
-      {/* <View style={styles.searchRow}>
-        <AppTextInput 
-          iconName="search" 
-          iconFamily="far"
-          value={search} 
-          placeholder="Search" 
-          onChangeText={(text) => searchFilter(text)}
-          style={{ height: 18 }}
-        />
-      </View> */}
-      <FlatList 
+      <FlatList
         data={displayList}
         ItemSeparatorComponent={ListItemSeperator}
         keyExtractor={submission => submission.id.toString()}
         refreshControl={
-          <RefreshControl 
+          <RefreshControl
             refreshing={onRefresh}
             onRefresh={handleRefresh}
           />
         }
-        renderItem={({item}) => 
-        <ListItem 
-          category={item.CatName}
-          cityState={item.City + ", " + item.State}
-          code={item.Code}
-          image={item.PrimaryImage}
-          source={item.Source}
-          status={item.Status}
-          submitterName={item.FirstName + " " + item.LastName}
-          submitterFlag={item.FlagNumber}
-          onPress={() => navigation.navigate("SubmissionDetailScreen", {id: item.id})}
-        />}
+        renderItem={({ item }) =>
+          <ListItem
+            category={item.CatName}
+            cityState={item.City + ", " + item.State}
+            code={item.Code}
+            image={item.PrimaryImage}
+            source={item.Source}
+            status={item.Status}
+            submitterName={item.FirstName + " " + item.LastName}
+            submitterFlag={item.FlagNumber}
+            onPress={() => navigation.navigate("SubmissionDetailScreen", { id: item.id })}
+          />}
       />
     </Screen>
   );
