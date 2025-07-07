@@ -21,7 +21,7 @@ import useAuth from '../auth/useAuth';
 let formattedDate = Date.now;
 
 function addZero(i) {
-  if (i < 10) {i = "0" + i}
+  if (i < 10) { i = "0" + i }
   return i;
 }
 
@@ -35,19 +35,19 @@ function SubmissionDetailScreen({ navigation, route }) {
   const submissionLat = submissionDetails.Latitude;
   const submissionLong = submissionDetails.Longitude;
   const submissionCode = submissionDetails.Code;
-  const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q='});
+  const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
   const gpsUrl = Platform.select({
     ios: `${scheme}${submissionCode}@${submissionLat},${submissionLong}`,
     android: `${scheme}${submissionLat},${submissionLong}(${submissionCode})`
   });
   const primaryImageURL = settings.submittedImagesBaseUrl + submissionDetails.PrimaryImage;
   const optionalImageURL = settings.submittedImagesBaseUrl + submissionDetails.OptionalImage;
-  const sampleImageURL = "http://images.tourofhonor.com/SampleImages/" + submissionDetails.SampleImage;
+  const sampleImageURL = "https://images.tourofhonor.com/SampleImages/" + submissionDetails.SampleImage;
   const rawDate = submissionDetails.createdAt;
 
   let iconSize = 20;
 
-  if(Platform.OS === 'android') {
+  if (Platform.OS === 'android') {
     iconSize = 28;
     const dateValue = new Date(rawDate);
     const month = dateValue.getMonth() + 1;
@@ -88,8 +88,8 @@ function SubmissionDetailScreen({ navigation, route }) {
   }
 
   const handleReject = async (submission) => {
-    if (scorerNotes == '') { return alert('You must provide notes to reject a submission.')}
-    
+    if (scorerNotes == '') { return alert('You must provide notes to reject a submission.') }
+
     const rejectData = {
       ScorerNotes: scorerNotes,
       Status: 2,
@@ -130,7 +130,7 @@ function SubmissionDetailScreen({ navigation, route }) {
       {getSubmissionDetailsApi.error && (
         <>
           <AppText>Couldn't retrieve submission details.</AppText>
-          <AppButton title="Retry" onPress={getSubmissionDetailsApi.request}/>
+          <AppButton title="Retry" onPress={getSubmissionDetailsApi.request} />
         </>
       )}
       <ScrollView style={styles.container}>
@@ -154,29 +154,29 @@ function SubmissionDetailScreen({ navigation, route }) {
         {/* Top Section */}
         <View style={styles.sampleImageContainer}>
           <TouchableOpacity onPress={() => Linking.openURL(sampleImageURL)}>
-            <Image style={styles.sampleImage} source={{uri: sampleImageURL}} />
+            <Image style={styles.sampleImage} source={{ uri: sampleImageURL }} />
           </TouchableOpacity>
         </View>
 
         {/* Middle Section */}
         <View style={styles.submittedImagesContainer}>
           <TouchableOpacity onPress={() => Linking.openURL(primaryImageURL)}>
-            <Image style={styles.submittedImage} source={{uri: primaryImageURL}} />
+            <Image style={styles.submittedImage} source={{ uri: primaryImageURL }} />
           </TouchableOpacity>
-          {(submissionDetails.OptionalImage) && 
-          <>
-            <TouchableOpacity onPress={() => Linking.openURL(optionalImageURL)} >
-              <Image style={styles.submittedImage} source={{uri: optionalImageURL}} />
-            </TouchableOpacity>
-          </>}
+          {(submissionDetails.OptionalImage) &&
+            <>
+              <TouchableOpacity onPress={() => Linking.openURL(optionalImageURL)} >
+                <Image style={styles.submittedImage} source={{ uri: optionalImageURL }} />
+              </TouchableOpacity>
+            </>}
         </View>
-        {(submissionDetails.RiderNotes) && 
+        {(submissionDetails.RiderNotes) &&
           <View style={styles.riderNotesContainer}>
             <MiniHeading style={styles.miniHeader}>Rider Notes</MiniHeading>
             <AppText style={styles.riderNotesText}>{submissionDetails.RiderNotes}</AppText>
           </View>}
-        <View style={styles.scoringSectionContainer}>  
-          <AppTextInput 
+        <View style={styles.scoringSectionContainer}>
+          <AppTextInput
             autoCorrect
             defaultValue={submissionDetails.ScorerNotes}
             maxLength={250}
@@ -195,25 +195,25 @@ function SubmissionDetailScreen({ navigation, route }) {
 
         {/* Bottom Section */}
         <View style={styles.submissionDetailsContainer}>
-          <View style={styles.submissionDetailsDataLeft}>          
+          <View style={styles.submissionDetailsDataLeft}>
             <MiniHeading style={styles.miniHeader}>Submission Info</MiniHeading>
-            {submissionDetails.Source == 1 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fal', 'square-question']}/> Unknown</AppText>)}
+            {submissionDetails.Source == 1 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fal', 'square-question']} /> Unknown</AppText>)}
             {submissionDetails.Source == 2 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fab', 'apple']} /> iPhone</AppText>)}
             {submissionDetails.Source == 3 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fab', 'android']} /> Android</AppText>)}
             {submissionDetails.Source == 4 && (<AppText style={styles.submissionDetailsText}><FontAwesomeIcon style={styles.icon} icon={['fal', 'browser']} /> Web Portal</AppText>)}
             <AppText style={styles.submissionDetailsText}>{formattedDate}</AppText>
-            <MiniHeading style={[styles.miniHeader, {marginTop: 6}]}>Rider Info</MiniHeading>
+            <MiniHeading style={[styles.miniHeader, { marginTop: 6 }]}>Rider Info</MiniHeading>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.FlagNumber}</AppText>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.FirstName} {submissionDetails.LastName}</AppText>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.Email}</AppText>
-            <MiniHeading style={[styles.miniHeader, {marginTop: 6}]}>Other Riders</MiniHeading>
+            <MiniHeading style={[styles.miniHeader, { marginTop: 6 }]}>Other Riders</MiniHeading>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.OtherRiders}</AppText>
           </View>
           <View style={styles.submissionDetailsDataRight}>
             <MiniHeading style={styles.miniHeader}>Memorial Info</MiniHeading>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.Code}</AppText>
             <AppText style={styles.submissionDetailsText}>{submissionDetails.City}, {submissionDetails.State}</AppText>
-            <TouchableOpacity onPress={() => {Linking.openURL(gpsUrl)}}><AppText style={[styles.submissionDetailsText, {marginBottom: 11}]}>{submissionDetails.Latitude}, {submissionDetails.Longitude}</AppText></TouchableOpacity>
+            <TouchableOpacity onPress={() => { Linking.openURL(gpsUrl) }}><AppText style={[styles.submissionDetailsText, { marginBottom: 11 }]}>{submissionDetails.Latitude}, {submissionDetails.Longitude}</AppText></TouchableOpacity>
             <AppText style={styles.submissionDetailsText}>Access: {submissionDetails.Access}</AppText>
             <AppText style={styles.submissionDetailsText}>MultiImage: {submissionDetails.MultiImage}</AppText>
             <AppText style={styles.submissionDetailsText}>Restrictions: {submissionDetails.Restrictions}</AppText>
@@ -221,7 +221,7 @@ function SubmissionDetailScreen({ navigation, route }) {
         </View>
 
         {/* Weird fix for scrolling */}
-        <View style={{paddingVertical: 10}}>
+        <View style={{ paddingVertical: 10 }}>
           <AppText>&nbsp;</AppText>
         </View>
       </ScrollView>
