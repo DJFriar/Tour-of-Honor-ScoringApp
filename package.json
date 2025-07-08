@@ -21,7 +21,6 @@
     "@react-navigation/stack": "^7.2.3",
     "apisauce": "^2.1.5",
     "expo": "~52.0.42",
-    "expo-app-loading": "~2.1.1",
     "expo-application": "~6.0.2",
     "expo-dev-client": "~5.0.6",
     "expo-image-picker": "~16.0.6",
@@ -36,7 +35,7 @@
     "luxon": "^2.3.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-native": "^0.80.1",
+    "react-native": "^0.76.9",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-progress": "^5.0.0",
     "react-native-reanimated": "~3.16.1",
@@ -52,6 +51,17 @@
     "@babel/core": "^7.20.0",
     "@types/react": "~18.3.12",
     "typescript": "^5.3.3"
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "jwt-decode",
+          "@fortawesome/free-brands-svg-icons"
+        ],
+        "listUnknownPackages": false
+      }
+    }
   },
   "private": true
 }
