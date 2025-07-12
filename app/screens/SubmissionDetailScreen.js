@@ -83,12 +83,14 @@ function SubmissionDetailScreen({ navigation, route }) {
     if (!result.ok) {
       return alert('Could not save scoring response.')
     } else {
-      navigation.navigate(routes.SUBMISSION_LIST)
+      navigation.goBack();
     }
   }
 
   const handleReject = async (submission) => {
-    if (scorerNotes == '') { return alert('You must provide notes to reject a submission.') }
+    let scorerNotesLength = scorerNotes.length;
+    if (scorerNotesLength == 0) { return alert('You must provide notes to reject a submission.') }
+    if (scorerNotesLength > 0 && scorerNotesLength < 5) { return alert('At least a 5 character response is required to reject a submission.') }
 
     const rejectData = {
       ScorerNotes: scorerNotes,
@@ -101,7 +103,7 @@ function SubmissionDetailScreen({ navigation, route }) {
     if (!result.ok) {
       return alert('Could not save scoring response.')
     } else {
-      navigation.navigate(routes.SUBMISSION_LIST)
+      navigation.goBack();
     }
   }
 
@@ -117,7 +119,7 @@ function SubmissionDetailScreen({ navigation, route }) {
     if (!result.ok) {
       return alert('Could not save scoring response.')
     } else {
-      navigation.navigate(routes.SUBMISSION_LIST)
+      navigation.goBack();
     }
   }
 
